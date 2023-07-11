@@ -45,3 +45,19 @@ resource "aws_instance" "new_ec2_instance" {
   }
 }
 
+resource "aws_ebs_volume" "new_aws_ebs" {
+  availability_zone = aws_instance.new_ec2_instance[0].availability_zone
+  size              = 2
+  encrypted         = false
+
+  tags = {
+    name = "my_ebs"
+  }
+}
+
+resource "aws_volume_attachment" "new_ebs_mount1" {
+  #availability_zone = aws_instance.new_ec2_instance[0].availability_zone
+  device_name       = "/dev/sdb"
+  instance_id       = aws_instance.new_ec2_instance[0].id
+  volume_id         = aws_ebs_volume.new_aws_ebs.id
+}
